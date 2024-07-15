@@ -15,6 +15,7 @@
         "laravel/framework": "^11.9",
         "laravel/nova": "^4.0",
         "laravel/tinker": "^2.9",
+        "propaganistas/laravel-phone": "^5.3",
         "spatie/laravel-permission": "^6.9",
         "yieldstudio/nova-phone-field": "^2.0"
     },
