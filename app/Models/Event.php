@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property EventStatus $status
+ * @property string image
  */
 class Event extends Model
 {

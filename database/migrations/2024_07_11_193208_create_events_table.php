@@ -7,10 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
+        Schema::create('event_statuses', function (Blueprint $table) {
+            $table->id();
+            $table->string('status');
+        });
+
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->string('description')->nullable();
             $table->string('prerequisites')->nullable();
+            $table->foreignId('status_id')->constrained('event_statuses');
             $table->integer('spots');
             $table->integer('spots_taken');
             $table->integer('waitlist');
@@ -18,15 +25,12 @@ return new class extends Migration {
             $table->dateTime('start');
             $table->dateTime('end');
             $table->dateTime('grace');
-            $table->string('organizer_name');
-            $table->string('organizer_email');
-            $table->string('organizer_phone');
             $table->string('address');
             $table->text('mail_subject');
             $table->text('mail_body');
             $table->string('classes');
             $table->string('sorting');
-            $table->foreignId('author')->constrained('users');
+            $table->foreignId('author_id')->constrained('users');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -35,5 +39,6 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('events');
+        Schema::dropIfExists('event_statuses');
     }
 };

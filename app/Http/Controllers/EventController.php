@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -24,8 +25,9 @@ class EventController extends Controller
             foreach ($events as $event) {
                 $html .= view('events.partials.event-card', compact('event'))->render();
             }
+
             return response()->json([
-                'html' => $html,
+                'html'          => $html,
                 'next_page_url' => $events->nextPageUrl(),
             ]);
         }
@@ -39,23 +41,28 @@ class EventController extends Controller
         $this->authorize('create', Event::class);
 
         $data = $request->validate([
-            'title'           => ['required'],
-            'description'     => ['nullable'],
-            'prerequisites'   => ['nullable'],
-            'spots'           => ['required', 'integer'],
-            'spots_taken'     => ['required', 'integer'],
-            'waitlist'        => ['required', 'integer'],
-            'waitlist_taken'  => ['required', 'integer'],
-            'start'           => ['required', 'date'],
-            'end'             => ['required', 'date'],
-            'grace'           => ['required', 'date'],
-            'address'         => ['required'],
-            'mail_subject'    => ['required'],
-            'mail_body'       => ['required'],
-            'classes'         => ['required'],
-            'sorting'         => ['required'],
-            'author'          => ['required', 'exists:users'],
+            'title'          => ['required'],
+            'description'    => ['nullable'],
+            'prerequisites'  => ['nullable'],
+            'spots'          => ['required', 'integer'],
+            'spots_taken'    => ['required', 'integer'],
+            'waitlist'       => ['required', 'integer'],
+            'waitlist_taken' => ['required', 'integer'],
+            'start'          => ['required', 'date'],
+            'end'            => ['required', 'date'],
+            'grace'          => ['required', 'date'],
+            'address'        => ['required'],
+            'mail_subject'   => ['required'],
+            'mail_body'      => ['required'],
+            'classes'        => ['required'],
+            'sorting'        => ['required'],
+            'author'         => ['required', 'exists:users,id'],
+            'image'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('event_images', 'public');
+        }
 
         return Event::create($data);
     }
@@ -70,23 +77,31 @@ class EventController extends Controller
         $this->authorize('update', $event);
 
         $data = $request->validate([
-            'title'           => ['required'],
-            'description'     => ['nullable'],
-            'prerequisites'   => ['nullable'],
-            'spots'           => ['required', 'integer'],
-            'spots_taken'     => ['required', 'integer'],
-            'waitlist'        => ['required', 'integer'],
-            'waitlist_taken'  => ['required', 'integer'],
-            'start'           => ['required', 'date'],
-            'end'             => ['required', 'date'],
-            'grace'           => ['required', 'date'],
-            'address'         => ['required'],
-            'mail_subject'    => ['required'],
-            'mail_body'       => ['required'],
-            'classes'         => ['required'],
-            'sorting'         => ['required'],
-            'author'          => ['required', 'exists:users'],
+            'title'          => ['required'],
+            'description'    => ['nullable'],
+            'prerequisites'  => ['nullable'],
+            'spots'          => ['required', 'integer'],
+            'spots_taken'    => ['required', 'integer'],
+            'waitlist'       => ['required', 'integer'],
+            'waitlist_taken' => ['required', 'integer'],
+            'start'          => ['required', 'date'],
+            'end'            => ['required', 'date'],
+            'grace'          => ['required', 'date'],
+            'address'        => ['required'],
+            'mail_subject'   => ['required'],
+            'mail_body'      => ['required'],
+            'classes'        => ['required'],
+            'sorting'        => ['required'],
+            'author'         => ['required', 'exists:users,id'],
+            'image'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            if ($event->image) {
+                Storage::disk('public')->delete($event->image);
+            }
+            $data['image'] = $request->file('image')->store('event_images', 'public');
+        }
 
         $event->update($data);
 
@@ -104,30 +119,8 @@ class EventController extends Controller
 
     public function export(Event $event)
     {
-        $filename = Str::slug($event->title) . '.csv';
+        $this->authorize('export', $event);
 
-        return response()->streamDownload(function () use ($event) {
-            $handle = fopen('php://output', 'w');
-
-            fputcsv($handle, [
-                'Name',
-                'Email',
-                'Phone',
-                'Class',
-                'Waitlist',
-            ]);
-
-            foreach ($event->registrations as $registration) {
-                fputcsv($handle, [
-                    $registration->name,
-                    $registration->email,
-                    $registration->phone,
-                    $registration->class,
-                    $registration->waitlist,
-                ]);
-            }
-
-            fclose($handle);
-        }, $filename);
+        return response()->json();
     }
 }

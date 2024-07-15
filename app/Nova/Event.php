@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Markdown;
 use Laravel\Nova\Fields\MultiSelect;
 use Laravel\Nova\Fields\Number;
@@ -132,6 +133,11 @@ class Event extends Resource
                      ->rules('required'),
 
             HasMany::make('Reservations', 'reservations', Reservation::class),
+
+            Image::make('Image')
+                 ->disk('public')
+                 ->path('event_images')
+                 ->rules('nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'),
         ];
     }
 

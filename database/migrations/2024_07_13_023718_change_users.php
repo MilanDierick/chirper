@@ -13,34 +13,16 @@ return new class extends Migration {
             $table->integer('level')->unique();
         });
 
-        for ($i = 1; $i <= 12; $i++) {
-            DB::table('class_levels')->insert(['level' => $i]);
-        }
-
         Schema::create('school_types', function (Blueprint $table) {
             $table->id();
             $table->string('type');
         });
 
-        $types = [
-            'Gymnasium',
-            'Grundschule',
-            'Förderschule',
-            'Hauptschule',
-            'Realschule',
-            'Gesamtschule',
-            'Berufskolleg',
-            'Sonstiges',
-        ];
-
-        foreach ($types as $type) {
-            DB::table('school_types')->insert(['type' => $type]);
-        }
-
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('city');
+            $table->foreignId('school_type_id')->constrained('school_types');
         });
 
         Schema::create('children', function (Blueprint $table) {
@@ -53,7 +35,6 @@ return new class extends Migration {
             $table->boolean('special_needs');
             $table->boolean('media_consent');
             $table->foreignId('parent_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('school_type_id')->constrained('school_types');
             $table->foreignId('school_id')->constrained('schools');
             $table->softDeletes();
             $table->timestamps();
@@ -64,7 +45,7 @@ return new class extends Migration {
     {
         Schema::dropIfExists('children');
         Schema::dropIfExists('class_levels');
-        Schema::dropIfExists('school_types');
         Schema::dropIfExists('schools');
+        Schema::dropIfExists('school_types');
     }
 };
