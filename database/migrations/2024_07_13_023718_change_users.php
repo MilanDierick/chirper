@@ -1,0 +1,70 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('class_levels', function (Blueprint $table) {
+            $table->id();
+            $table->integer('level')->unique();
+        });
+
+        for ($i = 1; $i <= 12; $i++) {
+            DB::table('class_levels')->insert(['level' => $i]);
+        }
+
+        Schema::create('school_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('type');
+        });
+
+        $types = [
+            'Gymnasium',
+            'Grundschule',
+            'Förderschule',
+            'Hauptschule',
+            'Realschule',
+            'Gesamtschule',
+            'Berufskolleg',
+            'Sonstiges',
+        ];
+
+        foreach ($types as $type) {
+            DB::table('school_types')->insert(['type' => $type]);
+        }
+
+        Schema::create('schools', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('city');
+        });
+
+        Schema::create('children', function (Blueprint $table) {
+            $table->id();
+            $table->string('last_name');
+            $table->string('first_name');
+            $table->date('date_of_birth');
+            $table->foreignId('class_level_id')->constrained('class_levels');
+            $table->string('information')->nullable();
+            $table->boolean('special_needs');
+            $table->boolean('media_consent');
+            $table->foreignId('parent_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('school_type_id')->constrained('school_types');
+            $table->foreignId('school_id')->constrained('schools');
+            $table->softDeletes();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('children');
+        Schema::dropIfExists('class_levels');
+        Schema::dropIfExists('school_types');
+        Schema::dropIfExists('schools');
+    }
+};

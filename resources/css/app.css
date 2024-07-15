@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.scrolling-banner {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.scrolling-banner-inner {
+    display: flex;
+    width: max-content;
+    animation: scroll linear infinite;
+}
+
+.scrolling-banner-item {
+    flex: 0 0 auto;
+}
+
+.scrolling-banner-item img {
+    display: block;
+    height: auto;
+    max-height: 200px;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-100% / var(--image-count) * 2));
+    }
+}
