@@ -20,5 +20,9 @@ class AdminSeeder extends Seeder
             'password'          => Hash::make('freddy.mcfredderson@fake.com'),
             'remember_token'    => Str::random(10),
         ]);
+
+        // add admin role to user
+        $user = User::where('email', 'freddy.mcfredderson@fake.com')->first();
+        $user->assignRole('admin');
     }
 }
