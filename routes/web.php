@@ -13,6 +13,7 @@ Route::get('/', fn() => redirect()->route('events.index'));
 
 Route::get('/test-logging', function () {
     Log::info('Test log statement.');
+
     return 'Log statement added';
 });
 
@@ -43,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/children', [ChildController::class, 'store'])->name('children.store');
     Route::get('/children/{child}/edit', [ChildController::class, 'edit'])->name('children.edit');
     Route::put('/children/{child}', [ChildController::class, 'update'])->name('children.update');
+    Route::patch('/children/{child}', [ChildController::class, 'update']);
     Route::delete('/children/{child}', [ChildController::class, 'destroy'])->name('children.destroy');
 });
 

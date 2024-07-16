@@ -3,10 +3,9 @@
 namespace App\Nova;
 
 use App\Nova\Metrics\SpotsTaken;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -16,7 +15,6 @@ use Laravel\Nova\Fields\MultiSelect;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * @property string $title
@@ -28,6 +26,7 @@ class Event extends Resource
 
     public static $search = [
         'id',
+        'title',
         'address',
         'mail_subject',
         'mail_body',
@@ -117,24 +116,10 @@ class Event extends Resource
                     ->sortable()
                     ->rules('required'),
 
-            MultiSelect::make('Classes', 'classes')
-                       ->filterable()
-                       ->sortable()
-                       ->rules('required')
-                       ->options([
-                           'Class 1'  => 'Class 1',
-                           'Class 2'  => 'Class 2',
-                           'Class 3'  => 'Class 3',
-                           'Class 4'  => 'Class 4',
-                           'Class 5'  => 'Class 5',
-                           'Class 6'  => 'Class 6',
-                           'Class 7'  => 'Class 7',
-                           'Class 8'  => 'Class 8',
-                           'Class 9'  => 'Class 9',
-                           'Class 10' => 'Class 10',
-                           'Class 11' => 'Class 11',
-                           'Class 12' => 'Class 12',
-                       ]),
+            BelongsToMany::make('Class Levels', 'classLevels', ClassLevel::class)
+                         ->filterable()
+                         ->sortable()
+                         ->rules('required'),
 
             BelongsTo::make('Author', 'author', User::class)
                      ->filterable()

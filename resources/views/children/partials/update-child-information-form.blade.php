@@ -54,16 +54,6 @@
         </div>
 
         <div>
-            <x-input-label for="school_type_id" :value="__('School Type')"/>
-            <select id="school_type_id" name="school_type_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                @foreach(App\Models\SchoolType::all() as $type)
-                    <option value="{{ $type->id }}" {{ $type->id == old('school_type_id', $child->school_type_id) ? 'selected' : '' }}>{{ $type->type }}</option>
-                @endforeach
-            </select>
-            <x-input-error class="mt-2" :messages="$errors->get('school_type_id')"/>
-        </div>
-
-        <div>
             <x-input-label for="information" :value="__('Information')"/>
             <textarea id="information" name="information" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('information', $child->information) }}</textarea>
             <x-input-error class="mt-2" :messages="$errors->get('information')"/>

@@ -33,5 +33,12 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'delete events']);
         Permission::create(['name' => 'restore events']);
         Permission::create(['name' => 'export events']);
+
+        Permission::create(['name' => 'view all reservations']);
+        Permission::create(['name' => 'view reservation']);
+        Permission::create(['name' => 'create reservation']);
+        Permission::create(['name' => 'update reservation']);
+        Permission::create(['name' => 'delete reservation']);
+        Permission::create(['name' => 'restore reservation']);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use App\Models\ReservationType;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class ReservationController extends Controller
 {
@@ -21,18 +22,25 @@ class ReservationController extends Controller
         $data = $request->validate([
             'child_id'     => 'required|exists:children,id',
             'event_id'     => 'required|exists:events,id',
-            'request_type' => 'required|string',
+            'request_type' => 'required|string|exists:reservation_types,type',
         ]);
 
-        $reservationType = ReservationType::where('type', $data['request_type'])->firstOrFail();
+        // Convert the request type to the corresponding ID and remove the string value.
+        $data['reservation_type_id'] = ReservationType::where('type', $data['request_type'])->first()->id;
+        unset($data['request_type']);
 
-        Reservation::create([
-            'child_id'            => $data['child_id'],
-            'event_id'            => $data['event_id'],
-            'reservation_type_id' => $reservationType->id,
-        ]);
+        try {
+            Reservation::create($data);
+            flash()->success('Reservation created successfully.');
 
-        return redirect()->route('events.show', $request->event_id)->with('success', 'Reservation created successfully.');
+            return redirect()->route('events.show', ['event' => $data['event_id']])
+                             ->with('success', 'Reservation created successfully.');
+        } catch (ValidationException $e) {
+            flash()->error($e->getMessage());
+
+            return redirect()->route('events.show', ['event' => $data['event_id']])
+                             ->withErrors($e->errors());
+        }
     }
 
     public function show(Reservation $reservation)
@@ -43,13 +51,23 @@ class ReservationController extends Controller
     public function update(Request $request, Reservation $reservation)
     {
         $data = $request->validate([
-            'child_id' => ['required', 'exists:children'],
-            'event_id' => ['required', 'exists:events'],
+            'child_id'     => ['required', 'exists:children'],
+            'event_id'     => ['required', 'exists:events'],
+            'request_type' => ['required', 'string', 'exists:reservation_types,type'],
         ]);
 
-        $reservation->update($data);
+        try {
+            $reservation->update($data);
+            flash()->success('Reservation updated successfully.');
 
-        return $reservation;
+            return redirect()->route('events.show', ['event' => $data['event_id']])
+                             ->with('success', 'Reservation updated successfully.');
+        } catch (ValidationException $e) {
+            flash()->error($e->getMessage());
+
+            return redirect()->route('events.show', ['event' => $data['event_id']])
+                             ->withErrors($e->errors());
+        }
     }
 
     public function destroy(Reservation $reservation)

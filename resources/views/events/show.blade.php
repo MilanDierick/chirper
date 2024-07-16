@@ -53,7 +53,7 @@
 
             <!-- Right column for organizer details and map -->
             <div class="bg-white shadow-xl sm:rounded-lg p-6 w-full lg:w-1/3 relative">
-                <x-reservation-button :event="$event" />
+                <x-reservation-button :event="$event"/>
 
                 <h2 class="text-xl font-semibold text-gray-900 mb-4">Kontakt</h2>
                 <p class="text-gray-700">

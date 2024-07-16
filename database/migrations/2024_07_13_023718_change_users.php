@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('class_levels', function (Blueprint $table) {
-            $table->id();
-            $table->integer('level')->unique();
-        });
-
         Schema::create('school_types', function (Blueprint $table) {
             $table->id();
             $table->string('type');
@@ -44,7 +39,6 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('children');
-        Schema::dropIfExists('class_levels');
         Schema::dropIfExists('schools');
         Schema::dropIfExists('school_types');
     }

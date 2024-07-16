@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             EventStatusSeeder::class,
+            ReservationTypesSeeder::class,
             ClassLevelSeeder::class,
             SchoolTypeSeeder::class,
             SchoolSeeder::class,

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Exceptions\NovaExceptionHandler;
 use App\Nova\Child;
 use App\Nova\ClassLevel;
 use App\Nova\Dashboards\Main;
@@ -12,6 +13,7 @@ use App\Nova\ReservationType;
 use App\Nova\School;
 use App\Nova\SchoolType;
 use App\Nova\User;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -127,8 +129,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        //
+        $this->app->singleton(
+            ExceptionHandler::class,
+            NovaExceptionHandler::class
+        );
     }
 }

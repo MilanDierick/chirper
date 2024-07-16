@@ -52,7 +52,6 @@ class ChildController extends Controller
             'information'    => 'nullable|string',
             'special_needs'  => 'required|boolean',
             'media_consent'  => 'required|boolean',
-            'school_type_id' => 'required|exists:school_types,id',
             'school_id'      => 'required|exists:schools,id',
         ]);
 
@@ -81,7 +80,6 @@ class ChildController extends Controller
             'information'    => 'nullable|string',
             'special_needs'  => 'required|boolean',
             'media_consent'  => 'required|boolean',
-            'school_type_id' => 'required|exists:school_types,id',
             'school_id'      => 'required|exists:schools,id',
         ]);
 

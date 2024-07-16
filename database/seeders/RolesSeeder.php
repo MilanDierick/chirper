@@ -38,6 +38,13 @@ class RolesSeeder extends Seeder
             'delete events',
             'restore events',
             'export events',
+
+            'view all reservations',
+            'view reservation',
+            'create reservation',
+            'update reservation',
+            'delete reservation',
+            'restore reservation',
         ]);
     }
 }

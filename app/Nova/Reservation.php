@@ -27,11 +27,11 @@ class Reservation extends Resource
 
             BelongsTo::make('Child', 'child', Child::class)
                      ->withSubtitles()
-                     ->searchable(),
+                     ->required(),
 
             BelongsTo::make('Event', 'event', Event::class)
                      ->withSubtitles()
-                     ->searchable(),
+                     ->required(),
         ];
     }
 

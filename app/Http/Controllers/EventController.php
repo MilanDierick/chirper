@@ -54,9 +54,10 @@ class EventController extends Controller
             'address'        => ['required'],
             'mail_subject'   => ['required'],
             'mail_body'      => ['required'],
-            'classes'        => ['required', 'array'],
             'sorting'        => ['required', 'integer'],
             'author'         => ['required', 'exists:users,id'],
+            'class_levels'   => ['required', 'array'],
+            'class_levels.*' => ['exists:class_levels,id'],
             'image'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ]);
 
@@ -65,7 +66,10 @@ class EventController extends Controller
             $data['image'] = $request->file('image')->store('event_images', 'public');
         }
 
-        return Event::create($data);
+        $event = Event::create($data);
+        $event->classLevels()->sync($data['class_levels']);
+
+        return redirect()->route('events.index', $event);
     }
 
     public function show(Event $event)
@@ -91,9 +95,10 @@ class EventController extends Controller
             'address'        => ['required'],
             'mail_subject'   => ['required'],
             'mail_body'      => ['required'],
-            'classes'        => ['required'],
             'sorting'        => ['required'],
             'author'         => ['required', 'exists:users,id'],
+            'class_levels'   => ['required', 'array'],
+            'class_levels.*' => ['exists:class_levels,id'],
             'image'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ]);
 
@@ -105,8 +110,9 @@ class EventController extends Controller
         }
 
         $event->update($data);
+        $event->classLevels()->sync($data['class_levels']);
 
-        return $event;
+        return redirect()->route('events.index');
     }
 
     public function destroy(Event $event)

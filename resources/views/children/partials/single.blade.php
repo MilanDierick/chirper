@@ -7,7 +7,6 @@
             <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-md">{{ __('Date of Birth:') }} {{ $child->date_of_birth->format('j M Y') }}</span>
             <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-md">{{ __('Class Level:') }} {{ $child->classLevel->level }}</span>
             <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-md">{{ $child->school->name }}</span>
-            <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-md">{{ $child->schoolType->type }}</span>
             <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-md">{{ __('Special Needs:') }} {{ $child->special_needs ? 'Yes' : 'No' }}</span>
             <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-md">{{ __('Media Consent:') }} {{ $child->media_consent ? 'Yes' : 'No' }}</span>
         </div>

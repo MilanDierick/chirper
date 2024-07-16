@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\Event;
-use App\Observers\EventObserver;
+use App\Models\Reservation;
+use App\Observers\ReservationObserver;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\ValidationException;
 use Laravel\Nova\Nova;
+use Throwable;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,8 +24,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Nova::serving(static function () {
-            Event::observe(EventObserver::class);
+        Reservation::observe(ReservationObserver::class);
+
+        Nova::serving(function () {
+            Nova::report(function (Throwable $e, $request) {
+                if ($e instanceof ValidationException) {
+                    $request->session()->flash('nova.validation', json_encode($e->errors()));
+                }
+            });
         });
     }
 }
