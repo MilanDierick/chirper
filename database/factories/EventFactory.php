@@ -15,27 +15,6 @@ class EventFactory extends Factory
 
     public function definition(): array
     {
-        // generate a random continuous range of classes based on ClassLevel
-        $classes     = [];
-        $classLevels = ClassLevel::all();
-        foreach ($classLevels as $classLevel) {
-            $classes[] = $classLevel->id;
-        }
-
-        // generate a min and max value for the range
-        $min = $this->faker->randomElement($classes);
-        $max = $this->faker->randomElement($classes);
-
-        // ensure that the min value is less than the max value
-        if ($min > $max) {
-            $temp = $min;
-            $min  = $max;
-            $max  = $temp;
-        }
-
-        // generate a range of classes
-        $classes = range($min, $max);
-
         return [
             'title'          => $this->faker->words(3, true),
             'description'    => $this->faker->paragraph(),
@@ -50,7 +29,6 @@ class EventFactory extends Factory
             'address'        => $this->faker->address(),
             'mail_subject'   => $this->faker->word(),
             'mail_body'      => implode("\n", $this->faker->paragraphs()),  // Convert array to string
-            'classes'        => $classes,
             'sorting'        => 1,
             'created_at'     => Carbon::now(),
             'updated_at'     => Carbon::now(),
@@ -58,5 +36,32 @@ class EventFactory extends Factory
             'author_id' => User::inRandomOrder()->first()->id,
             'status_id' => EventStatus::first()->id,
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Event $event) {
+            // Fetch all class levels
+            $classLevels = ClassLevel::all();
+
+            // Generate a random continuous range of class levels
+            $min = $classLevels->random()->id;
+            $max = $classLevels->random()->id;
+
+            // Ensure the min value is less than the max value
+            if ($min > $max) {
+                $temp = $min;
+                $min  = $max;
+                $max  = $temp;
+            }
+
+            // Get the class levels within the range
+            $classes = ClassLevel::where('id', '>=', $min)
+                                 ->where('id', '<=', $max)
+                                 ->get();
+
+            // Attach the class levels to the event
+            $event->classLevels()->attach($classes);
+        });
     }
 }

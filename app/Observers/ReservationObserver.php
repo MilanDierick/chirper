@@ -15,7 +15,6 @@ class ReservationObserver
      */
     public function creating(Reservation $reservation): void
     {
-        dump($reservation);
         $this->saving($reservation);
     }
 
@@ -24,7 +23,6 @@ class ReservationObserver
      */
     public function updating(Reservation $reservation): void
     {
-        dump($reservation);
         $this->saving($reservation);
     }
 
@@ -56,7 +54,7 @@ class ReservationObserver
     /**
      * @throws Exception if requested reservation does not meet requirements.
      */
-    private function handleRequestType(Event $event, Child $child): void
+    public function handleRequestType(Event $event, Child $child): void
     {
         $this->checkIfChildHasRequiredClassLevel($event, $child);
         $this->checkIfChildHasSchedulingConflict($event, $child);

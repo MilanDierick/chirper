@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Metrics\RequestedReservations;
 use App\Nova\Metrics\SpotsTaken;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -139,7 +140,8 @@ class Event extends Resource
     public function cards(Request $request): array
     {
         return [
-            new SpotsTaken
+            new SpotsTaken,
+            new RequestedReservations,
         ];
     }
 
