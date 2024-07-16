@@ -16,8 +16,8 @@
     let hasMoreEvents = true;
     let loading = false; // Flag to indicate if a request is in progress
 
-    window.onscroll = function() {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+    window.onscroll = function () {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
             loadMoreEvents();
         }
     };
