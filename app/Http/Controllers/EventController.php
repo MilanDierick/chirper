@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Throwable;
 
 class EventController extends Controller
@@ -35,32 +35,33 @@ class EventController extends Controller
         return view('events.index', compact('events'));
     }
 
-
     public function store(Request $request)
     {
         $this->authorize('create', Event::class);
 
         $data = $request->validate([
-            'title'          => ['required'],
-            'description'    => ['nullable'],
-            'prerequisites'  => ['nullable'],
+            'title'          => ['required', 'string'],
+            'description'    => ['nullable', 'string'],
+            'prerequisites'  => ['nullable', 'string'],
             'spots'          => ['required', 'integer'],
             'spots_taken'    => ['required', 'integer'],
             'waitlist'       => ['required', 'integer'],
             'waitlist_taken' => ['required', 'integer'],
+            'status_id'      => ['required', 'exists:event_statuses,id'],
             'start'          => ['required', 'date'],
             'end'            => ['required', 'date'],
             'grace'          => ['required', 'date'],
             'address'        => ['required'],
             'mail_subject'   => ['required'],
             'mail_body'      => ['required'],
-            'classes'        => ['required'],
-            'sorting'        => ['required'],
+            'classes'        => ['required', 'array'],
+            'sorting'        => ['required', 'integer'],
             'author'         => ['required', 'exists:users,id'],
-            'image'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'image'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ]);
 
         if ($request->hasFile('image')) {
+            Log::info('Image file provided');
             $data['image'] = $request->file('image')->store('event_images', 'public');
         }
 
@@ -93,7 +94,7 @@ class EventController extends Controller
             'classes'        => ['required'],
             'sorting'        => ['required'],
             'author'         => ['required', 'exists:users,id'],
-            'image'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'image'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ]);
 
         if ($request->hasFile('image')) {

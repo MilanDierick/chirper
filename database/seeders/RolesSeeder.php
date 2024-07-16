@@ -16,18 +16,28 @@ class RolesSeeder extends Seeder
         $adminRole->givePermissionTo([
             'view users',
             'create users',
-            'edit users',
+            'update users',
             'delete users',
 
             'view roles',
             'create roles',
-            'edit roles',
+            'update roles',
             'delete roles',
 
             'view permissions',
             'create permissions',
-            'edit permissions',
+            'update permissions',
             'delete permissions',
+
+            'update children',
+            'delete children',
+            'restore children',
+
+            'create events',
+            'update events',
+            'delete events',
+            'restore events',
+            'export events',
         ]);
     }
 }

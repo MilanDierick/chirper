@@ -15,8 +15,8 @@ return new class extends Migration {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description')->nullable();
-            $table->string('prerequisites')->nullable();
+            $table->text('description')->nullable();
+            $table->text('prerequisites')->nullable();
             $table->foreignId('status_id')->constrained('event_statuses');
             $table->integer('spots');
             $table->integer('spots_taken');
@@ -29,7 +29,7 @@ return new class extends Migration {
             $table->text('mail_subject');
             $table->text('mail_body');
             $table->string('classes');
-            $table->string('sorting');
+            $table->tinyInteger('sorting')->default(1);
             $table->foreignId('author_id')->constrained('users');
             $table->softDeletes();
             $table->timestamps();

@@ -5,10 +5,16 @@ use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 // redirect to /events
 Route::get('/', fn() => redirect()->route('events.index'));
+
+Route::get('/test-logging', function () {
+    Log::info('Test log statement.');
+    return 'Log statement added';
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

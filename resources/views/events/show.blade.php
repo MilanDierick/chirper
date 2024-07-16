@@ -4,7 +4,7 @@
             <!-- Left column for event details -->
             <div class="bg-white shadow-xl sm:rounded-lg w-full lg:w-2/3">
                 <div class="relative" style="padding-top: 56.25%; overflow: hidden; position: relative; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-                    <img src="{{ $event->image_url ?? 'https://placehold.co/800x800' }}" alt="{{ $event->title }}" class="absolute top-0 left-0 w-full h-full object-cover">
+                    <img src="{{ $event->image ? Storage::url($event->image) : 'https://placehold.co/800x800' }}" alt="{{ $event->title }}" class="absolute top-0 left-0 w-full h-full object-cover">
                 </div>
                 <div class="p-6">
                     <h1 class="text-2xl font-semibold text-gray-900 mb-2">{{ $event->title }}</h1>

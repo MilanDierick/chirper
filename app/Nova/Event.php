@@ -3,7 +3,9 @@
 namespace App\Nova;
 
 use App\Nova\Metrics\SpotsTaken;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
@@ -12,7 +14,9 @@ use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Markdown;
 use Laravel\Nova\Fields\MultiSelect;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * @property string $title
@@ -76,6 +80,17 @@ class Event extends Resource
                   ->sortable()
                   ->rules('required', 'integer'),
 
+            Select::make('Status', 'status_id')
+                  ->options([
+                      1 => 'Request',
+                      2 => 'Open',
+                      3 => 'Waitlist',
+                      4 => 'Full',
+                      5 => 'Cancelled',
+                  ])
+                  ->sortable()
+                  ->rules('required'),
+
             DateTime::make('Start', 'start')
                     ->sortable()
                     ->rules('required', 'date'),
@@ -121,11 +136,6 @@ class Event extends Resource
                            'Class 12' => 'Class 12',
                        ]),
 
-            Text::make('Sorting', 'sorting')
-                ->hideFromIndex()
-                ->readonly()
-                ->rules('required'),
-
             BelongsTo::make('Author', 'author', User::class)
                      ->filterable()
                      ->searchable()
@@ -137,7 +147,7 @@ class Event extends Resource
             Image::make('Image')
                  ->disk('public')
                  ->path('event_images')
-                 ->rules('nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'),
+                 ->rules('nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'),
         ];
     }
 

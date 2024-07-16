@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Event;
+use App\Observers\EventObserver;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Nova\Nova;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Nova::serving(static function () {
+            Event::observe(EventObserver::class);
+        });
     }
 }
