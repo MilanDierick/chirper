@@ -18,7 +18,7 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $events = Event::paginate(9);
+        $events = Event::paginate(12);
 
         if ($request->expectsJson()) {
             $html = '';

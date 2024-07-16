@@ -2,15 +2,11 @@
 
 namespace App\Models;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @property EventStatus $status
@@ -78,6 +74,12 @@ class Event extends Model
         return "Class N/A";
     }
 
+    // Assume statuses are an array of strings
+    public function getStatusesAttribute(): array
+    {
+        // Example statuses; replace with actual logic
+        return ['bookable', 'remember', 'waitlist'];
+    }
 
     protected function casts(): array
     {
@@ -87,48 +89,5 @@ class Event extends Model
             'grace'   => 'datetime',
             'classes' => 'array',
         ];
-    }
-
-    /**
-     * @throws GuzzleException
-     */
-    private function fetchUnsplashImage()
-    {
-        $client   = new Client();
-        $response = $client->request('GET', 'https://api.unsplash.com/photos/random', [
-            'headers' => [
-                'Authorization' => 'Client-ID d5XoF-6BpWhMjvyHWWkZ2sH3L9XUDtlhUKWD5H1Zyfg',
-            ],
-            'query'   => [
-                'query'       => 'event',
-                'orientation' => 'landscape',
-            ],
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        return $data['urls']['regular'];  // URL of the image
-    }
-
-    /**
-     * Fetches and stores an Unsplash image locally.
-     *
-     * @throws GuzzleException
-     * @return string
-     */
-    public function fetchAndStoreUnsplashImage()
-    {
-        $imageUrl = $this->fetchUnsplashImage();
-
-        // Get the image content
-        $imageContent = file_get_contents($imageUrl);
-
-        // Generate a unique filename based on the URL
-        $filename = 'event_images/' . basename($imageUrl);
-
-        // Store the image in the public disk
-        Storage::disk('public')->put($filename, $imageContent);
-
-        return $filename;
     }
 }
