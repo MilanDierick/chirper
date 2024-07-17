@@ -46,10 +46,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/children/{child}', [ChildController::class, 'update'])->name('children.update');
     Route::patch('/children/{child}', [ChildController::class, 'update']);
     Route::delete('/children/{child}', [ChildController::class, 'destroy'])->name('children.destroy');
+    Route::get('/children/{child}/reservations', [ChildController::class, 'reservations'])->name('children.reservations');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('reservations', ReservationController::class)->only(['store']);
+    Route::resource('reservations', ReservationController::class)->only(['store', 'destroy']);
 });
 
 require __DIR__.'/auth.php';
+

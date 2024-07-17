@@ -100,4 +100,11 @@ class ChildController extends Controller
 
         return redirect()->route('children.index')->with('success', 'Child deleted successfully.');
     }
+
+    public function reservations(Child $child)
+    {
+        $reservations = $child->reservations;
+
+        return view('children.reservations', compact('child', 'reservations'));
+    }
 }
