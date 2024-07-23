@@ -17,6 +17,7 @@
         "php": "^8.2",
         "fakerphp/faker": "^1.23",
         "guzzlehttp/guzzle": "^7.8",
+        "hansschouten/laravel-pagebuilder": "^0.30.0",
         "kiritokatklian/nova-permission": "^4.0",
         "laravel/framework": "^11.9",
         "laravel/nova": "^4.0",
